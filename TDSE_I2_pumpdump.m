@@ -4,7 +4,8 @@
 %   Adi Natan (natan@stanford.edu)
 %   Feb 7, 2024
 % --------------------------------------------------------------------
-ccc
+clear all
+close all
 % Turn on (1) and off (0) plotting of the wavepacket propagation
 plot_flag=1;
 
