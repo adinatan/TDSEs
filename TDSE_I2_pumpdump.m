@@ -246,7 +246,6 @@ xlabel('\tau [fs]');
 
 nexttile
 imagesc(time,r,rho2);colorbar
-%caxis([-3e-3 3e-3]);
 colorbar
 set(gca,'Ydir','normal')
 xlabel('\tau [fs]');
@@ -257,7 +256,6 @@ ylim([2 5])
 
 nexttile
 imagesc(time,r,rho21);colorbar
-%caxis([-3e-3 3e-3]);
 colorbar
 set(gca,'Ydir','normal')
 xlabel('\tau [fs]');
