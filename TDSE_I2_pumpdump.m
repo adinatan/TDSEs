@@ -133,12 +133,10 @@ pulse2= E0_2*exp(-2*log(2)/FWHM^2*(t-t0_2).^2).*exp( 1i*w0_2*(t-t0_2))*exp(1i*ph
 u_kin_half= exp(-1i*0.5*dt*kin);
 u_pot1= exp(-1i*dt*(V1));
 u_pot2= exp(-1i*dt*(V2));
-%u_pot3= exp(-1i*dt*(V3));
 
 psi1=    psi_GS.';          % unperturbed wavefunction
 psi2=    zeros(N, 1);     % First order wavefunction
 psi21=   zeros(N, 1);     % second order wavefunction
-%psi3=  zeros(N, 1);     % third order wavefunction
 
 % only plot excited wavepackets
 if plot_flag
