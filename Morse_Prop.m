@@ -2,12 +2,8 @@
 clear all
 close all
 plot_flag = 'true';
-if plot_flag
-    figure('Position',[50 50 1200 400]);
-    tiledlayout(1,3,'Padding','tight')
-end
-% ================= conversions and constants ====================
 
+% ================= conversions and constants ====================
 % units conversions
 au2amu = 1/1822.888; % m_e to amu
 au2ang = 0.52917721092; % a_0 to angstrom
@@ -56,7 +52,6 @@ d_1 = 0.786/(a_0*au2D); % au = e
 p_01 = 0.097/au2D; % au = e*a_0
 
 Q = S*hbar/(p_01 *E_M); % au = hbar/E_h
-%A = 2*(pi/4 - atan(exp(-alpha_0)))/((alpha_0 -1)*(1-sech(alpha_0)));
 A = (2*(pi/4 - atan2(1,exp(alpha_0)))/alpha_0-1) /(1-sech(alpha_0));
 
 t_0 = Q *(S/S_0 - 2*(sqrt(2) -sqrt(3/2)))/(A+1); % au = hbar/E_h
@@ -79,17 +74,6 @@ omega(t >= t_N) = omega(find(t < t_N,1,'last'));
 U = ones(1,Nt);
 U(t < t_0) = (1-sech(alpha_0))^(-1)*(sech(alpha_0*(t(t<t_0)-t_0)/t_0) -sech(alpha_0)); % dimless
 U(t > t_c) = (1-sech(alpha_F))^(-1)*(sech(alpha_F*(t(t>t_c)-t_c)/t_0) -sech(alpha_F)); % dimless
-
-% plot
-if plot_flag
-    nexttile
-    t_c01 = t/cycle_01; % dimless
-    plot(t_c01, U, t_c01, omega/omega_01, t_c01, U.*cos(omega.*t));
-    xlabel('time (cycles)');
-    ylim([-1.1,1.1]);
-    title('Electric field');
-    legend('U(t)','\omega/\omega_{0,1}','E(t)');
-end
 
 %% ======================= 2 initial state ============================
 % ================= Set Morse Potential =================
@@ -123,7 +107,7 @@ T = ifftshift(T);
 dt_hbar = dt/hbar;
 psi_1 = psi_0;
 
-if plot_flag; nexttile; end
+if plot_flag; figure; end
 
 count = 0;
 for ti = 1:Nt
@@ -177,19 +161,33 @@ Ct =  dr * (conj(eigen) * psi.').';
 Pt = zeros(Nt_cycle_01,N_bs +1);
 Pt(:,1:(end-1)) = abs(Ct).^2;
 Pt(:,end) = 1 -sum(Pt,2);
-%% =====================  plot evolution of probabilities =====================
-% probabilities in each eigenstate
+%% =============== plot E(t) and evolution of probabilities (Fig 1) ==========
+
 if plot_flag
+    figure('Position',[50 50 500 700]);
+    tiledlayout(2,1,'Padding','tight')
+
+    % probabilities in each eigenstate
     nexttile
     vec = [0,1,8,14,24]; % similar to fig 1a of the paper
     for vi = 1:length(vec)
         plot(t_cycle_01/cycle_01,Pt(:,vec(vi)+1),'LineWidth',2); hold on;
         leg_Str{vi}=['P_{' num2str(vec(vi)) '}'];
     end
-    hold off;
 
-    title('Probability in State n ');
+    title('ES Population');
     xlabel('Time (cycles)');
-    leg = [leg_Str(1:end-1), 'P_{dis}'];
+    leg = [leg_Str(1:end-1), 'P_{diss}'];
     legend(leg,'NumColumns',round(vi/2));
+    set(gca,'FontSize',16)
+
+    nexttile
+    t_c01 = t/cycle_01; % dimless
+    plot(t_c01, U, t_c01, omega/omega_01,'LineWidth',2); hold on
+    plot(t_c01, U.*cos(omega.*t))
+    xlabel('Time (cycles)');
+    ylim([-1.1,1.1]);
+    title('Laser Pulse');
+    legend('U(t)','\omega/\omega_{0,1}','E(t)','Location','southwest');
+    set(gca,'FontSize',16)
 end
